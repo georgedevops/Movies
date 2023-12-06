@@ -218,7 +218,8 @@ app.all('*', (req, res) => {
   res.status(404).send('404 - Not Found');
 });
 
-app.use(errors());
+connectDB().then(() => {app.use(errors());
     app.listen(2000, () => {
         console.log("App listening on port : " + 2000);
 })
+});
