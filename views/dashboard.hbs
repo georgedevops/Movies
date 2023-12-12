@@ -8,8 +8,12 @@
     <script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>
     <link rel="stylesheet" href="/stylesheets/dashboard.css">
     <link rel="stylesheet" href="/stylesheets/bootstrap.css">
+	{{!-- <script src="/js/dashboard.js"></script> --}}
 </head>
 <body>
+   {{!-- <nav class="site-footer">
+    {{>nav}}
+    </nav> --}}
     <section class="slider_container">
         <section class="slider">
             <div class="slide one image-with-gradient"  >
@@ -57,202 +61,201 @@
                     <div>Hangover 3</div>
                     <p>The Hangover Part III: Friends embark on a wild, dangerous adventure to save a kidnapped friend, facing chaos and hilarity.</p>
                  <a href="https://www.youtube.com/watch?v=96TelFMZwHc" type="button"  class="btn btn-primary"> <img src="/photo/youtube.png" title="youtube icons" style="height: 40px;width:40px; margin-right:1em"/>Watch Trailer</a>    
-                </span>
-                
+                </span>               
             </div>
         </section>
     </section>
+ <form method="GET" action="/api/applyfilter/1/20">
+  <div style="display: flex;
+    flex-direction: row;
+    justify-content: center;
+    column-gap: 3em;
+    border-radius: 30px;
+    margin: auto 10%;
+    color: white;
+    align-items: center;
+    width: auto;
+    padding: 27px;
+    background: #d8d7d61f;">
+
+    <div class="form-check">
+      <input class="form-check-input" name="genres" type="checkbox" {{Comedygener  filter}} value="Comedy" id="flexCheckDefault" onchange="updateButtonState()">
+      <label class="form-check-label" for="flexCheckDefault">Comedy</label>
+    </div>
+
+    <div class="form-check">
+      <input class="form-check-input" name="genres" type="checkbox" {{Familygener  filter}} value="Family" id="flexCheckChecked" onchange="updateButtonState()">
+      <label class="form-check-label" for="flexCheckChecked">Family</label>
+    </div>
+
+    <div class="form-check">
+      <input class="form-check-input" name="genres" type="checkbox"  {{Dramagener  filter}} value="Drama" id="flexCheckChecked" onchange="updateButtonState()">
+      <label class="form-check-label" for="flexCheckChecked">Drama</label>
+    </div>
+
+    <div class="form-check">
+      <input class="form-check-input" name="genres" type="checkbox" {{Scifigener  filter}} value="Sci-Fi" id="flexCheckChecked" onchange="updateButtonState()">
+      <label class="form-check-label" for="flexCheckChecked">Sci-Fi</label>
+    </div>
+
+    <div class="form-check">
+      <input class="form-check-input" name="genres" type="checkbox"  {{Romancegener  filter}} value="Romance" id="flexCheckChecked" onchange="updateButtonState()">
+      <label class="form-check-label" for="flexCheckChecked">Romance</label>
+    </div>
+
+    <button style="background-color: #8f0b0b;" disabled type="submit" class="btn btn-primary" data-mdb-ripple-init id="applyFilterButton">Apply Filter</button>
+  </div>
+</form>
+
+<script>
+  function updateButtonState() {
+    const checkboxes = document.querySelectorAll('input[name="genres"]');
+    const applyFilterButton = document.getElementById('applyFilterButton');
+
+    // Check if at least one checkbox is checked
+    const atLeastOneChecked = Array.from(checkboxes).some(checkbox => checkbox.checked);
+
+    // Enable/disable the button based on the condition
+    applyFilterButton.disabled = !atLeastOneChecked;
+  }
+</script>
     <div style="display: flex;
-    justify-content: space-between;
-    position:relative;left:8em;
-    flex-direction: column;"> <h2 style="color: white;">All Movies</h2>
+    justify-content: space-between;margin: 1em 7em;
+    position:relative;
+    flex-direction: column;"><div style="display: flex;
+    justify-content: flex-start;
+    flex-direction: column;">  <h2 style="color: white;">{{title}}</h2>   <div class="tags">
+          {{#each filter}}
+				 <a  class="tag">{{this}}</a>
+         {{/each}}					
+			</div>
+	{{!-- <button style="background-color: #e81e1e;" class="btn btn-primary" id="openModalBtn" data-toggle="modal" data-target="#exampleModal">Add Movie</button> </div> --}}
     <div  style="  border-top: 8px solid #e81e1e;
     border-radius: 0px;
     width: 16%; margin-bottom:2em"></div>
     </div>
+    <h4 style="color: rgba(141, 141, 141, 0.692);">Page: {{page}}</h4>
+
+
+
     <div class="wrapper">
+		 {{#each movies}}
+              {{#each this}}
+              {{#if this.[_id] }}
 	<div class="card">
-		<div class="poster"><img src="https://i.postimg.cc/jjBSrfnQ/poster1-img.jpg" alt="Location Unknown"></div>
+		<div class="poster"><img src="{{ checkimage this.poster}}" alt="No Poster"></div>
 		<div class="details">
-			<h1>Location Unknown</h1>
-			<h2>2021 • PG • 1hr 38min</h2>
+			<h1>{{this.title}}</h1>
+			<h2>{{this.year}} • {{this.type}} • {{this.runtime}} min</h2>
 			<div class="rating">
-				<i class="fas fa-star"></i>
-				<i class="fas fa-star"></i>
-				<i class="fas fa-star"></i>
-				<i class="fas fa-star"></i>
-				<i class="far fa-star"></i>
-				<span>4.2/5</span>
+				<i class=" two-{{ibmrating this.imdb.rating}}">&#9733;</i>
+				<i class="fas fa-star four-{{ibmrating this.imdb.rating}}">&#9733;</i>
+				<i class="fas fa-star six-{{ibmrating this.imdb.rating}}">&#9733;</i>
+				<i class="fas fa-star eight-{{ibmrating this.imdb.rating}}">&#9733;</i>
+				<i class="far fa-star ten-{{ibmrating this.imdb.rating}}">&#9733;</i>
+				
+				<span>{{this.imdb.rating}}/10</span>
 			</div>
 			<div class="tags">
-				<span class="tag">Italian</span>
-				<span class="tag">Drama</span>
-				<span class="tag">Indie</span>
+				 <a  class="tag" href="/api/movies/{{this.[_id]}}">Know more</a>							
 			</div>
 			<p class="desc">
-				Marco, a disillusioned backpacker in his late 20s, embarks on a solitary journey in search for meaning.
+				{{decriptioncut this.plot}}
+			
 			</p>
 			<div class="cast">
 				<h3>Cast</h3>
-				<ul>
-					<li><img src="https://i.postimg.cc/jqgkqhSb/cast-11.jpg" alt="Marco Andrews" title="Marco Andrews"></li>
-					<li><img src="https://i.postimg.cc/8P7X7r7r/cast-12.jpg" alt="Rebecca Floyd" title="Rebecca Floyd"></li>
-					<li><img src="https://i.postimg.cc/2SvHwRFk/cast-13.jpg
-" alt="Antonio Herrera" title="Antonio Herrera"></li>
-				</ul>
+
+					{{ caustshots this.cast}}
+
 			</div>
 		</div>
 	</div>
-	<div class="card">
-		<div class="poster"><img src="https://i.postimg.cc/GtxLYS7q/poster2-img.jpg" alt="Location Unknown"></div>
-		<div class="details">
-			<h1>Air</h1>
-			<h2>2020 • PG • 24min</h2>
-			<div class="rating">
-				<i class="fas fa-star"></i>
-				<i class="fas fa-star"></i>
-				<i class="fas fa-star"></i>
-				<i class="fas fa-star"></i>
-				<i class="far fa-star"></i>
-				<span>4/5</span>
-			</div>
-			<div class="tags">
-				<span class="tag">Romance</span>
-				<span class="tag">Comedy</span>
-				<span class="tag">Short</span>
-			</div>
-			<p class="desc">
-				Two strangers meet together on a plane flying to the alps.
-			</p>
-			<div class="cast">
-				<h3>Cast</h3>
-				<ul>
-					<li><img src="https://i.postimg.cc/yY2QcYRp/cast-21.jpg" alt="Angelina Whyte" title="Angelina Whyte"></li>
-					<li><img src="https://i.postimg.cc/R0BgpsXc/cast-22.jpg" alt="Ivan Benson" title="Ivan Benson"></li>
-				</ul>
-			</div>
-		</div>
-	</div>
-	<div class="card">
-		<div class="poster"><img src="https://i.postimg.cc/yxH6DzPD/poster3-img.jpg" alt="Location Unknown"></div>
-		<div class="details">
-			<h1>End Credits</h1>
-			<h2>2021 • R • 1hr 41min</h2>
-			<div class="rating">
-				<i class="fas fa-star"></i>
-				<i class="fas fa-star"></i>
-				<i class="fas fa-star"></i>
-				<i class="fas fa-star"></i>
-				<i class="fas fa-star-half-alt"></i>
-				<span>4.7/5</span>
-			</div>
-			<div class="tags">
-				<span class="tag yellow">Teen</span>
-				<span class="tag">Comedy</span>
-				<span class="tag blue">Drama</span>
-			</div>
-			<p class="desc">
-				Alex, together with his best friends, goes on a road trip whilst experiencing friendship, self-discovery, and the bittersweet transition to adulthood.
-			</p>
-			<div class="cast">
-				<h3>Cast</h3>
-				<ul>
-					<li><img src="https://i.postimg.cc/xd3twv4B/cast-31.jpg" alt="Jessica Enduro" title="Jessica Enduro"></li>
-					<li><img src="https://i.postimg.cc/C1MmSZy5/cast-32.jpg" alt="Charles Garcia" title="Charles Garcia"></li>
-				</ul>
-			</div>
-		</div>
-	</div>
-    <div class="card">
-		<div class="poster"><img src="https://i.postimg.cc/yxH6DzPD/poster3-img.jpg" alt="Location Unknown"></div>
-		<div class="details">
-			<h1>End Credits</h1>
-			<h2>2021 • R • 1hr 41min</h2>
-			<div class="rating">
-				<i class="fas fa-star"></i>
-				<i class="fas fa-star"></i>
-				<i class="fas fa-star"></i>
-				<i class="fas fa-star"></i>
-				<i class="fas fa-star-half-alt"></i>
-				<span>4.7/5</span>
-			</div>
-			<div class="tags">
-				<span class="tag yellow">Teen</span>
-				<span class="tag">Comedy</span>
-				<span class="tag blue">Drama</span>
-			</div>
-			<p class="desc">
-				Alex, together with his best friends, goes on a road trip whilst experiencing friendship, self-discovery, and the bittersweet transition to adulthood.
-			</p>
-			<div class="cast">
-				<h3>Cast</h3>
-				<ul>
-					<li><img src="https://i.postimg.cc/xd3twv4B/cast-31.jpg" alt="Jessica Enduro" title="Jessica Enduro"></li>
-					<li><img src="https://i.postimg.cc/C1MmSZy5/cast-32.jpg" alt="Charles Garcia" title="Charles Garcia"></li>
-				</ul>
-			</div>
-		</div>
-	</div>
-    <div class="card">
-		<div class="poster"><img src="https://i.postimg.cc/yxH6DzPD/poster3-img.jpg" alt="Location Unknown"></div>
-		<div class="details">
-			<h1>End Credits</h1>
-			<h2>2021 • R • 1hr 41min</h2>
-			<div class="rating">
-				<i class="fas fa-star"></i>
-				<i class="fas fa-star"></i>
-				<i class="fas fa-star"></i>
-				<i class="fas fa-star"></i>
-				<i class="fas fa-star-half-alt"></i>
-				<span>4.7/5</span>
-			</div>
-			<div class="tags">
-				<span class="tag yellow">Teen</span>
-				<span class="tag">Comedy</span>
-				<span class="tag blue">Drama</span>
-			</div>
-			<p class="desc">
-				Alex, together with his best friends, goes on a road trip whilst experiencing friendship, self-discovery, and the bittersweet transition to adulthood.
-			</p>
-			<div class="cast">
-				<h3>Cast</h3>
-				<ul>
-					<li><img src="https://i.postimg.cc/xd3twv4B/cast-31.jpg" alt="Jessica Enduro" title="Jessica Enduro"></li>
-					<li><img src="https://i.postimg.cc/C1MmSZy5/cast-32.jpg" alt="Charles Garcia" title="Charles Garcia"></li>
-				</ul>
-			</div>
-		</div>
-	</div>
-    <div class="card">
-		<div class="poster"><img src="https://i.postimg.cc/yxH6DzPD/poster3-img.jpg" alt="Location Unknown"></div>
-		<div class="details">
-			<h1>End Credits</h1>
-			<h2>2021 • R • 1hr 41min</h2>
-			<div class="rating">
-				<i class="fas fa-star"></i>
-				<i class="fas fa-star"></i>
-				<i class="fas fa-star"></i>
-				<i class="fas fa-star"></i>
-				<i class="fas fa-star-half-alt"></i>
-				<span>4.7/5</span>
-			</div>
-			<div class="tags">
-				<span class="tag yellow">Teen</span>
-				<span class="tag">Comedy</span>
-				<span class="tag blue">Drama</span>
-			</div>
-			<p class="desc">
-				Alex, together with his best friends, goes on a road trip whilst experiencing friendship, self-discovery, and the bittersweet transition to adulthood.
-			</p>
-			<div class="cast">
-				<h3>Cast</h3>
-				<ul>
-					<li><img src="https://i.postimg.cc/xd3twv4B/cast-31.jpg" alt="Jessica Enduro" title="Jessica Enduro"></li>
-					<li><img src="https://i.postimg.cc/C1MmSZy5/cast-32.jpg" alt="Charles Garcia" title="Charles Garcia"></li>
-				</ul>
-			</div>
-		</div>
-	</div>
+	  {{/if }}
+          {{/each }}
+              {{/each }}
+
 </div>
+
+ <span id="pageTotal">{{total}}</span>
+ <span id="pageTitle">{{title}}</span>
+ <div class="pagination-container">
+    <button id="prev" onclick="changePage('prev')">Previous</button>
+    <div id="page-numbers" class="page-numbers">{{title}}</div>
+    <button id="next" onclick="changePage('next')">Next</button>
+  </div>
+
+
+
+<script>
+  const totalPages = {{total}}/40;
+  const text = document.getElementById("pageTitle").innerText;
+  console.log(text);
+  let currentPage = {{page}};
+  const itemsPerPage = 40; // You can adjust this based on your requirements
+
+  function changePage(action) {
+    if (action === 'prev' && currentPage > 1) {
+      currentPage--;
+    } else if (action === 'next' && currentPage < totalPages) {
+      currentPage++;
+    } else if (typeof action === 'number') {
+      currentPage = action;
+    }
+
+   
+    updatePagination();
+  }
+
+  function updatePagination() {
+    const pageNumbersContainer = document.getElementById('page-numbers');
+    pageNumbersContainer.innerHTML = '';
+
+    for (let i = Math.max(1, currentPage - 2); i <= Math.min(totalPages, currentPage + 2); i++) {
+      const pageNumberElement = document.createElement('div');
+      pageNumberElement.className = `page-number ${currentPage === i ? 'active' : ''}`;
+      pageNumberElement.textContent = i;
+      // Update the onclick event to navigate to a specific URL
+      pageNumberElement.onclick = () => navigateToPage(i);
+      pageNumbersContainer.appendChild(pageNumberElement);
+    }
+  }
+
+  // New function to navigate to a specific URL
+  function navigateToPage(pageNumber) {   
+let url =''
+    if(text.localeCompare("All") === 0) {
+   url = '/api/movies/?page='+pageNumber+'&perPage=20';
+    }
+     if(text.localeCompare("All movie") === 0) {
+   url = '/api/movies/?page='+pageNumber+'&perPage=20&type=movie';
+    }
+     if(text.localeCompare("All series") === 0) {
+   url = '/api/movies/?page='+pageNumber+'&perPage=20&type=series';
+    }
+    if(text.localeCompare("Filtered Data")===0){
+       var currentUrl = window.location.href;
+
+  // Define the regex pattern to find and replace the page parameter
+  var regex = /\/api\/applyfilter\/\d+\/\d+/;
+
+  // Replace the page parameter with the new value
+  url = currentUrl.replace(regex, '/api/applyfilter/' + pageNumber + '/20');
+
+    }
+    else{
+      url ='/api/movies/?page='+pageNumber+'&perPage=20&title='+text;
+    }
+  window.location.href = url;
+  }
+
+  // Initial setup
+  changePage(currentPage);
+
+
+
+</script>
+
 </body>
 </html>
+

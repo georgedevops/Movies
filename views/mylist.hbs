@@ -1,0 +1,298 @@
+   <!DOCTYPE html>
+   <html lang="en">
+   <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/stylesheets/dashboard.css">
+    <link rel="stylesheet" href="/stylesheets/bootstrap.css">
+    <script src="/js/dashboard.js"></script>
+    <title>Document</title>
+   </head>
+   <body>
+
+   {{!-- <nav class="site-footer">
+    {{>nav}}
+    </nav> --}}
+    <section class="slider_container">
+        <section class="slider">
+            <div class="slide one image-with-gradient"  >
+                
+                <img  src="/photo/aquaman.jpg"  alt="">
+                
+                <span class="caption">
+                  <div>Aquaman 2</div>  
+                  <p>Aquaman 2 sees Arthur Curry face a new oceanic threat, navigating political intrigue and uncovering secrets that reshape Atlantis's fate.</p>
+              <div><a href="https://www.youtube.com/watch?v=yN6pXeWY7nM" type="button" class="btn btn-primary" > <img src="/photo/youtube.png" title="youtube icons" style="height:40px; width:40px; margin-right:1em"/>Watch Trailer</a>  </div>  
+
+                </span>
+            </div>
+            <div class="slide two image-with-gradient">
+                <img src="/photo/bluebeetle.webp" alt="">
+                <span class="caption">
+                   <div> Blue Beetle</div>
+                   <p>Blue Beetle, a teen named Jaime gains powerful alien armor. He must master its abilities to save the world from impending threats.</p>
+                <a type="button" href="https://www.youtube.com/watch?v=vS3_72Gb-bI" class="btn btn-primary "> <img src="/photo/youtube.png" title="youtube icons" style="height: 40px;width:40px; margin-right:1em"/>Watch Trailer</a>    
+
+                </span>
+                 
+            </div>
+            <div class="slide three image-with-gradient">
+                <img src="/photo/elemets.jpg" alt="">
+                <span class="caption">
+                    <div>Elements  </div>
+                    <p>Elements: A captivating sci-fi thriller exploring humanity's struggle for survival as natural forces unleash chaos, testing resilience and unity.</p>
+                 <a type="button" href="https://www.youtube.com/watch?v=hXzcyx9V0xw" class="btn btn-primary"> <img src="/photo/youtube.png" title="youtube icons" style="height: 40px;width:40px; margin-right:1em"/>Watch Trailer</a>    
+                </span>
+                
+            </div>
+              <div class="slide four image-with-gradient">
+                <img src="/photo/money.jpg" alt="">
+                <span class="caption">
+                    <div>Money Heist  </div>
+                    <p>Money Heist: Intricate heist orchestrated by the Professor and his team, navigating love, betrayal, and high-stakes plans in Spain's Royal Mint.</p>
+                 <a type="button" href="https://www.youtube.com/watch?v=2ncLy2tHEwg" class="btn btn-primary"> <img src="/photo/youtube.png" title="youtube icons" style="height: 40px;width:40px; margin-right:1em"/>Watch Trailer</a>    
+                </span>
+                
+            </div>
+              <div class="slide five image-with-gradient">
+                <img src="/photo/hangover.jpg" alt="">
+                <span class="caption">
+                    <div>Hangover 3</div>
+                    <p>The Hangover Part III: Friends embark on a wild, dangerous adventure to save a kidnapped friend, facing chaos and hilarity.</p>
+                 <a href="https://www.youtube.com/watch?v=96TelFMZwHc" type="button"  class="btn btn-primary"> <img src="/photo/youtube.png" title="youtube icons" style="height: 40px;width:40px; margin-right:1em"/>Watch Trailer</a>    
+                </span>               
+            </div>
+        </section>
+    </section>
+    <div style="display: flex;
+    justify-content: space-between;margin: 0em 7em;
+    position:relative;
+    flex-direction: column;"><div style="display: flex;
+    justify-content: space-between;">  <h2 style="color: white;">My List</h2> 
+	<button style="background-color: #e81e1e;" class="btn btn-primary" id="openModalBtn" data-toggle="modal" data-target="#exampleModal">Add Movie</button> </div>
+    <div  style="  border-top: 8px solid #e81e1e;
+    border-radius: 0px;
+    width: 16%; margin-bottom:2em"></div>
+    </div>
+
+
+
+    <div class="wrapper">
+		 {{#each movies}}
+              {{#each this}}
+              {{#if this.[_id] }}
+	<div class="card">
+		<div class="poster"><img src="{{ checkimage this.poster}}" alt="No Poster"></div>
+		<div class="details">
+			<h1>{{this.title}}</h1>
+			<h2>{{this.year}} • {{this.type}} • {{this.runtime}} min</h2>
+			<div class="rating">
+				<i class=" two-{{ibmrating this.imdb.rating}}">&#9733;</i>
+				<i class="fas fa-star four-{{ibmrating this.imdb.rating}}">&#9733;</i>
+				<i class="fas fa-star six-{{ibmrating this.imdb.rating}}">&#9733;</i>
+				<i class="fas fa-star eight-{{ibmrating this.imdb.rating}}">&#9733;</i>
+				<i class="far fa-star ten-{{ibmrating this.imdb.rating}}">&#9733;</i>
+				
+				<span>{{this.imdb.rating}}/10</span>
+			</div>
+			<div class="tags">
+				 <a  class="tag" href="/api/movies/{{this.[_id]}}">Know more</a>							
+			</div>
+			<p class="desc">
+				{{decriptioncut this.plot}}
+			
+			</p>
+			<div class="cast">
+				<h3>Cast</h3>
+
+					{{ caustshots this.cast}}
+
+			</div>
+		</div>
+	</div>
+	  {{/if }}
+          {{/each }}
+              {{/each }}
+
+</div>
+{{!-- --------modal-------- --}}
+
+
+  <div id="addModal" class="modal">
+    <div class="modal-content">
+      <span class="close" id="closeModalBtn">&times;</span>
+      <h2>Add Movie</h2>
+            <form method="POST" id="myForm" action="/api/movies" enctype="multipart/form-data">
+              <!-- 2 column grid layout with text inputs for the first and last names -->
+              <div
+                class="flex"
+                style="display: flex;
+    column-gap: 2em;"
+              >
+                <div>
+                  <div class="form-outline mb-4">
+                    <input
+                      type="text"
+                      id="form3Example4"
+                      name="title"
+                      class="form-control"
+                    />
+                    <label
+                      class="form-label"
+                      name="title"
+                      for="form3Example4"
+                    >Title</label>
+                  </div>
+                  <div class="form-outline" data-mdb-input-init>
+                    <textarea
+                      class="form-control"
+                      name="plot"
+                      id="textAreaExample"
+                      rows="6"
+                    required></textarea>
+                    <label
+                      class="form-label"
+                      for="textAreaExample"
+                    >Plot</label>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-md-6 mb-4">
+                      <div class="form-outline">
+                        <input
+                          type="date"
+                          name="date"
+                          id="form3Example1"
+                          class="form-control"
+                          class="form-control/"
+                        required/>
+
+                        <label class="form-label" for="form3Example1">Select the
+                          release date</label>
+                      </div>
+                    </div>
+                    <div class="col-md-6 mb-4">
+                      <div class="form-outline">
+                        <input
+                          type="number"
+                          name="runtime"
+                          id="form3Example2"
+                          class="form-control"
+                        required/>
+                        <label class="form-label" for="form3Example2">Runtime in minutes</label>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-outline mb-4">
+                    <input
+                      type="file"
+                      name="photo"
+                      class="form-control"
+                      id="customFile" accept="image/*" required
+                    />
+                    <label
+                      class="form-label"
+                      name="title"
+                      for="form3Example4"
+                    >Poster Upload</label>
+                  </div>
+                </div>
+
+                <div>
+                  <div class="form-outline mb-4">
+                  <select  name="type" class="form-control form-control-sm"required>
+  <option value="series">Series</option>
+  <option value="movie"> Movie</option>
+</select>
+                    <label
+                      class="form-label"
+                      for="form3Example1"
+                    >Type</label>
+                  </div>
+				  <div class="form-outline mb-4">
+                    <input
+                      type="text"
+                      id="form3Example4"
+                      name="languages"
+                      class="form-control"
+                    required/>
+                    <label
+                      class="form-label"
+                      name="language"
+                      for="form3Example4"
+                    >Language saparate with ","</label>
+                  </div>
+				   <div class="form-outline mb-4">
+                    <input
+                      type="text"
+                      id="form3Example4"
+                      name="cast"
+                      class="form-control"
+                    />
+                    <label
+                      class="form-label"
+                      name="cast"
+                      for="form3Example4"
+                    required>Cast saparate with ","</label>
+                  </div>
+<div class="form-outline mb-4">
+	<div style="display: grid;grid-template-columns: repeat(2, 1fr); ">
+ <div class="form-check">
+  <input class="form-check-input" name="genre" type="checkbox" value="Comedy" id="flexCheckDefault">
+  <label class="form-check-label" for="flexCheckDefault">
+    Comedy
+  </label>
+</div>
+
+<div class="form-check">
+  <input class="form-check-input" name="genre" type="checkbox" value="Family" id="flexCheckChecked" checked>
+  <label class="form-check-label" for="flexCheckChecked">
+    Family
+  </label>
+</div>
+<div class="form-check">
+  <input class="form-check-input" name="genre" type="checkbox" value="Drama" id="flexCheckChecked" >
+  <label class="form-check-label" for="flexCheckChecked">
+    Drama
+  </label>
+</div>
+<div class="form-check">
+  <input class="form-check-input" name="genre" type="checkbox" value=" Sci-Fi" id="flexCheckChecked" >
+  <label class="form-check-label" for="flexCheckChecked">
+    Sci-Fi
+  </label>
+</div>
+<div class="form-check">
+  <input class="form-check-input" name="genre" type="checkbox" value="Romance" id="flexCheckChecked" >
+  <label class="form-check-label" for="flexCheckChecked">
+    Romance
+  </label>
+</div>
+</div>
+<div>
+                    <label class="form-label" for="form3Example2">Genre</label>
+                  </div>
+
+                  <!-- Email input -->
+                  <div class="form-outline mb-4">
+                   <label for="customRange3" class="form-label">Rating out of 10</label>
+                     <input type="range" name="rating" class="form-range" min="0" max="10" step="0.1" id="customRange3"required>
+                  </div>
+
+                  <!-- Submit button -->
+                  <button style="background-color: #8f0b0b;"
+                    type="submit"
+                    class="btn btn-primary"
+                    data-mdb-ripple-init
+                  >Add</button>                 
+                </div>
+              </div>
+            </form>
+        
+    </div>
+  </div>
+{{!-- ---------------- --}}
+
+</body>
+   
+   </html>

@@ -1,0 +1,171 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: sans-serif;
+}
+
+body {
+    position: relative;
+    width: 100%;
+    justify-content: center;
+    background-size: cover;
+    align-items: flex-start;
+    background-image: linear-gradient(to top, rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.75)), url(/photo/dashbackground.jpg);
+}
+#loadingDiv{
+    display: none;
+}
+.section {
+    margin-top: 8em;
+}
+
+.image-banner img {
+    border-radius: 13px;
+    height: 35em;
+
+}
+
+.banner {
+    column-gap: 10em;
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 3em;
+}
+
+.detail-banner {
+    display: flex;
+    row-gap: 1em;
+    flex-direction: column;
+}
+
+.detail-banner h2 {
+    color: white;
+    font-size: 1.5em;
+    font-weight: 200;
+}
+
+.detail-banner h1 {
+    color: white;
+    font-size: 2em;
+    max-width: 25em;
+    font-family: Century Gothic;
+    font-weight: 100;
+}
+
+.detail-banner h3 {
+    color: rgb(91, 90, 90);
+    font-size: 1.3em;
+    max-width: 25em;
+    font-weight: 500;
+}
+
+.detail-banner .rating {
+    position: relative;
+    margin-bottom: 15px;
+    display: flex;
+    gap: .25em;
+
+}
+
+.detail-banner .tags {
+    display: flex;
+    gap: .375em;
+    margin-bottom: .875em;
+    font-size: .85em;
+}
+
+.detail-banner .tags a {
+    padding: .35rem .65rem;
+    color: #fff;
+    text-decoration: none;
+    border: 1.5px solid rgba(255 255 255 / 0.4);
+    border-radius: 4px;
+    border-radius: 50px;
+}
+
+.detail-banner .rating i {
+    color: #e3c414;
+    font-size: 2em;
+}
+
+.detail-banner .rating span {
+    margin-left: 1em;
+    font-size: 2em;
+    color: rgb(183, 183, 183);
+}
+
+.two-0 {
+    color: rgb(113, 113, 113) !important;
+}
+
+.four-0 {
+    color: rgb(113, 113, 113) !important;
+}
+
+.six-0 {
+    color: rgb(113, 113, 113) !important;
+}
+
+.eight-0 {
+    color: rgb(113, 113, 113) !important;
+}
+
+.ten-0 {
+    color: rgb(113, 113, 113) !important;
+}
+
+
+.four-2 {
+    color: rgb(113, 113, 113) !important;
+}
+
+.six-2 {
+    color: rgb(113, 113, 113) !important;
+}
+
+.eight-2 {
+    color: rgb(113, 113, 113) !important;
+}
+
+.ten-2 {
+    color: rgb(113, 113, 113) !important;
+}
+
+
+
+.six-4 {
+    color: rgb(113, 113, 113) !important;
+}
+
+.eight-4 {
+    color: rgb(113, 113, 113) !important;
+}
+
+.ten-4 {
+    color: rgb(113, 113, 113) !important;
+}
+
+
+
+.eight-6 {
+    color: rgb(113, 113, 113) !important;
+}
+
+.ten-6 {
+    color: rgb(113, 113, 113) !important;
+}
+
+/* .ten-8{
+       color: rgb(113, 113, 113) !important;
+   } */
+.isNotauther {
+    display: none
+}
+
+.isauther {
+    display: block;
+    margin-bottom: 2em;
+}

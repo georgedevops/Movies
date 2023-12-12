@@ -1,0 +1,94 @@
+<!-- HTML Document for Netflix Navigation Bar -->
+
+<!-- Document structure and metadata -->
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Movie Bazzar</title>
+  </head>
+
+  <!-- Body of the HTML document -->
+  <body>
+    <!-- Handlebars template: Iterate over users and check if user ID exists -->
+    {{#each users}}
+      {{#if this._id}}
+        <!-- Navigation Bar Header for authenticated user -->
+        <header class="navbar">
+          <div class="container">
+
+            <!-- User Greeting and Logo -->
+            <div class="logo">Hi {{this.name}} !</div>
+
+            <!-- Navigation Links -->
+            <nav>
+              <ul>
+                <li><a href="/mylist/{{this._id}}">Mylist</a></li>
+                <li><a href="/">Home</a></li>
+                <li><a href="/api/movies/type?page=1&perPage=20&type=movie">Movies</a></li>
+                <li><a href="/api/movies/type?page=1&perPage=20&type=series">Series</a></li>
+
+                <!-- Search Bar -->
+                <li>
+                  <div class="input-group">
+                    <div class="form-outline" data-mdb-input-init>
+                      <input type="search" id="title" class="form-control" />
+                    </div>
+                    <a
+                      id="link"
+                      href="#"
+                      type="button"
+                      style="
+                        background-color: rgba(28, 28, 28, 0.564);
+                        color: white;
+                        padding: 0px 30px;
+                        display: flex;
+                        border-radius: 0px 30px 30px 0px;
+                        align-items: center;
+                      "
+                    >
+                      Search
+                    </a>
+                  </div>
+                </li>
+
+                <!-- Logout Link -->
+                <li>
+                  <a
+                    style="font-weight: 900; color:rgb(188, 10, 19)"
+                    href="/logout"
+                  >Log Out</a>
+                </li>
+              </ul>
+            </nav>
+
+          </div>
+        </header>
+      {{/if}}
+    {{/each}}
+
+    <!-- JavaScript to update search link based on input -->
+    <script>
+      document.getElementById('title').addEventListener('input', function() {
+        var inputValue = this.value;
+        var linkElement = document.getElementById('link');
+        linkElement.href = "/api/movies?title=" + inputValue;
+      });
+    </script>
+
+    <!-- Styles for the content -->
+    <style>
+      body { margin: 0; padding: 0; font-family: 'Arial', sans-serif; }
+      .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+      .navbar { width: 100%; position: fixed!important; top: 0px; height: 5em; z-index: 999999999;
+        background-color: #141414; color: #fff; padding: 15px 0; }
+      .logo { font-size: 1.5rem; font-weight: bold; }
+      nav { display: flex; align-items: center; }
+      nav ul { list-style: none; margin: 0; padding: 0; display: flex; align-items: center; }
+      nav ul li { margin-right: 20px; }
+      nav ul li a { text-decoration: none; color: #fff; font-size: 1rem; transition: color 0.3s ease; }
+      nav ul li a:hover { color: #e50914; font-weight: 600;}
+      nav ul li a.active { color: #e50914; font-weight: 600;}
+    </style>
+  </body>
+</html>

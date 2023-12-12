@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>
+    <link rel="stylesheet" href="/stylesheets/view.css">
+    <link rel="stylesheet" href="/stylesheets/bootstrap.css">
+    <link rel="stylesheet" href="/stylesheets/modal.css">
+    
+    <script src="/js/dashboard.js"></script>
+</head>
+<body>
+     {{!-- <nav class="site-footer">
+    {{>nav}}
+    </nav> --}}
+ 
+    
+  <div class="section">
+  
+    <div class="banner">
+      <div class="image-banner">
+       
+         
+          <div class="{{isAuther}}">
+                 <button style="background-color: #e81e1e;" class="btn btn-primary" id="openModalBtn" data-toggle="modal" data-target="#exampleModal">Edit </button> 
+ <button style="background-color: #1e1d1d; color:#e81e1e" class="btn btn-primary"type="button"  data-toggle="modal" data-target="#deleteModal">Delete </button> </div>
+  {{#each movies}} 
+   {{#if this.[_id]}}
+        <img src="{{this.poster}} " alt=""  />
+      </div>
+      <div class="detail-banner">
+        <div class="rating">
+				<i class=" two-{{ibmrating this.imdb.rating}}">&#9733;</i>
+				<i class="fas fa-star four-{{ibmrating this.imdb.rating}}">&#9733;</i>
+				<i class="fas fa-star six-{{ibmrating this.imdb.rating}}">&#9733;</i>
+				<i class="fas fa-star eight-{{ibmrating this.imdb.rating}}">&#9733;</i>
+				<i class="far fa-star ten-{{ibmrating this.imdb.rating}}">&#9733;</i>
+				
+				<span>{{this.imdb.rating}}/10</span>
+			</div>
+        <h1>{{this.title}}</h1>
+        <h3>{{this.year}} • {{this.type}} • {{this.runtime}} min</h3>
+        <h2>GENRE</h2>
+         <div class="tags">
+          {{#each this.genres}}
+				 <a  class="tag">{{this}}</a>
+         {{/each}}					
+			</div>
+      <h2>LANGUAGE</h2>
+         <div class="tags">
+          {{#each this.languages}}
+				 <a  class="tag">{{this}}</a>
+         {{/each}}	
+         </div>	
+
+         <h2>PLOT</h2>	
+         <h3>{{this.plot}}</h3>		
+           <h2>CAST</h2>
+         <div class="tags">
+          {{#each this.cast}}
+				 <a  class="tag">{{this}}</a>
+         {{/each}}	
+         </div>	
+         {{!-- <div>
+                 <button style="background-color: #e81e1e;" class="btn btn-primary" id="openModalBtn" data-toggle="modal" data-target="#exampleModal">Edit </button> 
+ <button style="background-color: #1e1d1d; color:#e81e1e" class="btn btn-primary"type="button"  data-toggle="modal" data-target="#deleteModal">Delete </button> </div> --}}
+ </div>
+			</div>
+      
+      </div>
+   
+  </div>    
+
+{{!-- ----------------------Delete modal-------------------------}}
+
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content" style="    color: aliceblue;
+    background-color: #ffffff1c;
+    margin: 52% auto;
+    position: sticky;
+    padding: 38px;
+    backdrop-filter: blur(5px);
+    width: 109%;">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Confirm Delete</h5>
+               
+            </div>
+            <div class="modal-body">
+                Are you sure you want to remove {{this.title}} ?
+            </div>
+            <div class="modal-footer">
+              <form method="POST" action="/del/movies/{{this.[_id]}}">
+              <input hidden type="text" name="imagepath" value="{{this.poster}}">
+                <!-- Delete button triggers the actual delete operation -->
+                 <button style="background-color: #8f0b0b;"
+                    type="submit"
+                    class="btn btn-primary"
+                    data-mdb-ripple-init
+                  >Delete</button>   
+                <!-- Cancel button closes the modal without deleting -->
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+{{!-------------------------------------------------------------- --}}
+
+
+
+  <div id="addModal" class="modal">
+    <div class="modal-content">
+      <span class="close" id="closeModalBtn">&times;</span>
+      <h2>Add Movie</h2>
+            <form method="POST" id="myForm" action="/api/movies/{{this.[_id]}}">
+              <!-- 2 column grid layout with text inputs for the first and last names -->
+              <div
+                class="flex"
+                style="display: flex;
+    column-gap: 2em;"
+              >
+                <div>
+                  <div class="form-outline mb-4">
+                    <input
+                      type="text"
+                      id="form3Example4"
+                      name="title"
+                      value="{{this.title}}"
+                      class="form-control"
+                    />
+                    <label
+                      class="form-label"
+                      name="title"
+                      for="form3Example4"
+                      
+                    >Title</label>
+                  </div>
+                  <div class="form-outline" data-mdb-input-init>
+                    <textarea
+                      class="form-control"
+                      name="plot"
+                      id="textAreaExample"
+                      rows="6"
+                      
+                    required>{{this.plot}}</textarea>
+                    <label
+                      class="form-label"
+                      for="textAreaExample"
+                    >Plot</label>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-md-6 mb-4">
+                      <div class="form-outline">
+                        <input
+                          type="date"
+                          name="date"
+                          value="{{this.year}}-01-01"
+                          id="form3Example1"
+                          class="form-control"
+                          class="form-control/"
+                        required/>
+
+                        <label class="form-label" for="form3Example1">Select the
+                          release date</label>
+                      </div>
+                    </div>
+                    <div class="col-md-6 mb-4">
+                      <div class="form-outline">
+                        <input
+                          type="number"
+                          name="runtime"
+                          value="{{this.runtime}}"
+                          id="form3Example2"
+                          class="form-control"
+                        required/>
+                        <label class="form-label" for="form3Example2">Runtime in minutes</label>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-outline mb-4">
+                    {{!-- <input
+                       disabled
+                      type="file"
+                      name="photo"
+                      value="/photo/{{this.poster}}"
+                      class="form-control"
+                      id="customFile" accept="image/*" required
+                    />
+                    <label
+                      class="form-label"
+                      name="title"
+                      for="form3Example4"
+                    >Poster Upload</label> --}}
+                  <div class="image-banner">
+        <img style="height: 12rem;" src="{{this.poster}} " alt=""  />
+      </div>
+                  </div>
+                </div>
+
+                <div>
+                  <div class="form-outline mb-4">
+                 <select name="type" class="form-control form-control-sm" required>
+  <option value="series" >Series</option>
+  <option value="movie" {{isSelected this.type}}>Movie</option>
+</select>
+
+                    <label
+                      class="form-label"
+                      for="form3Example1"
+                    >Type</label>
+                  </div>
+				  <div class="form-outline mb-4">
+                    <input
+                      type="text"
+                      id="form3Example4"
+                      name="languages"
+                      value="{{languageConverstion this.languages}}"
+                      class="form-control"
+                    required/>
+                    <label
+                      class="form-label"
+                      name="language"
+                      for="form3Example4"
+                    >Language saparate with ","</label>
+                  </div>
+				   <div class="form-outline mb-4">
+                    <input
+                      type="text"
+                      id="form3Example4"
+                      name="cast"
+                      value="{{languageConverstion this.cast}}"
+                      class="form-control"
+                    />
+                    <label
+                      class="form-label"
+                      name="cast"
+                      for="form3Example4"
+                    required>Cast saparate with ","</label>
+                  </div>
+<div class="form-outline mb-4">
+	<div style="display: grid;grid-template-columns: repeat(2, 1fr); ">
+ <div class="form-check">
+  <input class="form-check-input" name="genre" type="checkbox" {{Comedygener  this.genres}} value="Comedy" id="flexCheckDefault">
+  <label class="form-check-label" for="flexCheckDefault">
+    Comedy
+  </label>
+</div>
+
+<div class="form-check">
+  <input class="form-check-input" name="genre" type="checkbox" {{Familygener  this.genres}} value="Family" id="flexCheckChecked">
+  <label class="form-check-label" for="flexCheckChecked">
+    Family
+  </label>
+</div>
+<div class="form-check">
+  <input class="form-check-input" name="genre" type="checkbox" {{Dramagener  this.genres}} value="Drama" id="flexCheckChecked" >
+  <label class="form-check-label" for="flexCheckChecked">
+    Drama
+  </label>
+</div>
+<div class="form-check">
+  <input class="form-check-input" name="genre" type="checkbox" {{Scifigener  this.genres}} value="Sci-Fi" id="flexCheckChecked" >
+  <label class="form-check-label" for="flexCheckChecked">
+    Sci-Fi
+  </label>
+</div>
+<div class="form-check">
+  <input class="form-check-input" name="genre" type="checkbox" {{Romancegener  this.genres}} value="Romance" id="flexCheckChecked" >
+  <label class="form-check-label" for="flexCheckChecked">
+    Romance
+  </label>
+</div>
+</div>
+<div>
+                    <label class="form-label" for="form3Example2">Genre</label>
+                  </div>
+
+                  <!-- Email input -->
+                  <div class="form-outline mb-4">
+                   <label for="customRange3" class="form-label">Rating out of 10</label>
+                     <input type="range" value="{{this.imdb.rating}}" name="rating" class="form-range" min="0" max="10" step="0.1" id="customRange3"required>
+                  </div>
+
+                  <!-- Submit button -->
+                  <button style="background-color: #8f0b0b;"
+                    type="submit"
+                    class="btn btn-primary"
+                    data-mdb-ripple-init
+                  >Update</button>                 
+                </div>
+              </div>
+            </form>
+        
+    </div>
+  </div>  
+
+  
+   {{/if}}
+    {{/each }}
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+<!-- Your custom script for the delete operation -->
+<script>
+    function deleteItem() {
+        // Perform the delete operation here
+        // You can make an AJAX request or use any method specific to your application
+        // After deletion, you might want to close the modal or redirect the user
+        console.log('Deleting item...');
+        // Close the modal
+        $('#deleteModal').modal('hide');
+
+    }
+</script>
+</body>
+</html>
+
