@@ -23,6 +23,7 @@ function initialize(passport) {
     let query = { email: email };
     let user = await User.findOne(query);
     console.log(user);
+    console.log("tested")
 
     // Check if the user exists
     if (user == null) {
@@ -46,13 +47,16 @@ function initialize(passport) {
 
   // Serialize user information into a token
   passport.serializeUser((user, done) => {
+    console.log("serilaing")
     done(null, user._id); 
   });
 
   // Deserialize user from the token
-  passport.deserializeUser(async function (userId, done) {
+  passport.deserializeUser(async function (userId, done)  {
     try {
       const user = await User.findById(userId);
+
+      console.log("deserilise")
       if (!user) {
         return done(null, false, { message: "User not found" });
       }
