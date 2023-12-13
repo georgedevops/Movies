@@ -17,6 +17,7 @@ var mongoose = require("mongoose");
 var app = express();
 const cookieParser = require('cookie-parser');
 app.use(cookieParser());
+require('crypto').randomBytes(64).toString('hex')
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const multer = require("multer");
@@ -214,33 +215,7 @@ function trimString(inputString, maxLength) {
 }
 
 
-// ------------------View Routes-------------------
-/**
- * Middleware function to check if the user is authenticated.
- *
- * @param {Object} req - Express request object.
- * @param {Object} res - Express response object.
- * @param {function} next - Express next middleware function.
- */
-function checkAuthenticated(req, res, next) {
-  const token = req.cookies.jwt;
-  // If no token is present, redirect to the login page
-  if (!token) {
-    return res.redirect("/login");
-  }
 
-  // Verify the token using the JWT_SECRET
-  jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
-    // If there's an error or the token is invalid, redirect to the login page
-    if (err) {
-      return res.redirect("/login");
-    }
-
-    // Set the user information in the request object
-    req.user = decoded;
-    next();
-  });
-}
 
 
 /**
@@ -444,7 +419,7 @@ function isStrongPassword(password) {
  * @param {Object} req - Express request object.
  * @param {Object} res - Express response object.
  */
-app.post("/signup", checkNotAuthenticated, async (req, res) => {
+app.post("/signup", async (req, res) => {
   try {
     isUserExist = false;
     const user = await Users.find({ email: req.body.email });
@@ -474,31 +449,31 @@ app.post("/signup", checkNotAuthenticated, async (req, res) => {
       });
     }
   } catch {
-    //  else{
-
-    //   console.log("user : "+isUserExist)
-    //   console.log("message : "+message)
-    //   res.render('signUp',{ error :message, name:req.body.name,email:req.body.email, isUserExist :user} )
-    //  }
-    // }
-
+  
     res.redirect("/signup");
   }
 });
 
 function checkAuthenticated(req, res, next) {
-  if (req.isAuthenticated()) {
-    return next();
+  const token = req.cookies.jwt;
+  console.log("tocken value " + token)
+  if (!token) {
+    return res.redirect('/login');
   }
-  res.redirect("/login");
+
+  jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+    console.log("tocken verification is done")
+    if (err) {
+      console.log("error with verify ")
+      return res.redirect('/login');
+    }
+
+     // Set the user in the request object
+    next();
+  });
 }
 
-function checkNotAuthenticated(req, res, next) {
-  if (req.isAuthenticated()) {
-    return res.redirect("/");
-  }
-  next();
-}
+
 /**
  * POST route for user login.
  * Checks if the user is not authenticated, authenticates the user using passport-local strategy,
@@ -508,36 +483,35 @@ function checkNotAuthenticated(req, res, next) {
  * @param {Object} req - Express request object.
  * @param {Object} res - Express response object.
  */
-// app.post(
-//   "/login",
-//   checkNotAuthenticated,
-//   passport.authenticate("local", {
-//     successRedirect: "/",
-//     failureRedirect: "/login",
-//     failureFlash: true,
-//   }),
-//   (req, res) => {
-//     const token = jwt.sign({ userId: req.user._id }, process.env.JWT_SECRET, {
-//       expiresIn: "1h",
-//     });
-//     res.cookie("jwt", token);
-//     res.redirect("/");
-//   }
-// );
+
 app.post(
-  "/login",
-  checkNotAuthenticated,
+  "/login", 
   passport.authenticate("local", {
-    successRedirect: "/",
+    successRedirect: "/setTocken",
     failureRedirect: "/login",
     failureFlash: true,
   }),
   (req, res) => {
-    const token =  jwt.sign({ userId: req.user._id }, process.env.JWT_SECRET, { expiresIn: "1h" });
-    res.cookie("jwt", token);
+    console.log("req.user");
+   
+    const username = "aggs@gan.com"
+    const user = { name : username }
+    //const token = jwt.sign(user, process.env.JWT_SECRET);
+    const token= "IdzrtmFYVu5B9MF"
+     console.log(token);
+    res.cookie('jwt', token, { httpOnly: true });
+
     res.redirect("/");
   }
 );
+
+app.get("/setTocken",  (req, res) => {
+  const token = jwt.sign({ id: req.user._id, username: req.user.email }, process.env.JWT_SECRET);   
+  console.log(token);
+  res.cookie('jwt', token, { httpOnly: true });
+  res.redirect("/");
+});
+
 
 /**
  * Middleware function to verify the presence of a valid JWT token in the request headers.
@@ -548,40 +522,6 @@ app.post(
  * @param {Object} res - Express response object.
  * @param {Function} next - Express next function to pass control to the next middleware.
  */
-function verifyToken(req, res, next) {
-  console.log("verifying the tocken")
-  console.log(req.headers)
-  const bearerHeader = req.headers["authorization"];
-  if (typeof bearerHeader != "undefined") {
-    const bearer = bearerHeader.split(" ");
-    const bearerToken = bearer[1];
-    req.token = bearerToken;
-    next();
-  } else {
-    res.sendStatus(403); // Forbidden
-  }
-}
-
-/**
- * Endpoint to access a secure route requiring a valid JWT token.
- * It uses the `verifyToken` middleware to check the presence of a valid token in the request headers.
- * If the token is valid, it verifies it using the JWT library and responds with the decoded user information.
- * If the token is invalid or missing, it returns a 403 Forbidden status.
- *
- * @param {Object} req - Express request object.
- * @param {Object} res - Express response object.
- */
-app.get("/api/secure-route", verifyToken, (req, res) => {
-
-  console.log(req.token)
-  jwt.verify(req.token, process.env.JWT_SECRET, (err, decoded) => {
-    if (err) {
-      return res.status(403).json({ error: "Forbidden" });
-    }
-    // Access to the protected route is granted
-    res.json({ message: "Access granted", user: decoded });
-  });
-});
 
 
 //Display the details of the a particular movie
